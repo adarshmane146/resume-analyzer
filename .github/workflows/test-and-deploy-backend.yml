@@ -1,0 +1,40 @@
+name: test-and-deploy-backend
+on:
+  push:
+    branches:
+    - master
+    paths:
+    - 'src/backend/**'
+jobs:
+  test-backend:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.8'
+    - name: install Python dependencies
+      working-directory: ./src/backend
+      run: pip install -r requirements.txt
+    - name: run unit tests
+      working-directory: ./src/backend/tests/unit-tests
+      run: python -m unittest
+  deploy-backend:
+    needs: test-backend
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: create zip file
+      working-directory: ./src/backend
+      run: zip -r deploy.zip . -x '*.git*'
+    - name: deploy backend to Elastic Beanstalk
+      uses: einaregilsson/beanstalk-deploy@v20
+      with:
+        aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        application_name: resume-analyzer-backend 
+        environment_name: resume-analyzer-backend-env
+        version_label: "${{ github.sha }}"
+        region: eu-west-1
+        deployment_package: ./src/backend/deploy.zip

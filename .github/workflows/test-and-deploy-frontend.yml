@@ -1,0 +1,30 @@
+name: test-and-deploy-frontend
+on:
+  push:
+    branches:
+    - main
+    paths:
+    - 'src/frontend/**'
+jobs:
+  test-frontend:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: set up NodeJS
+      uses: actions/setup-node@v3
+      with:
+        node-version: '14.x'
+    - name: install frontend dependencies
+      working-directory: ./src/frontend
+      run: npm install
+    - name: run tests
+      working-directory: ./src/frontend
+      run: npm test
+  deploy-frontend:
+    needs: test-frontend
+    runs-on: ubuntu-latest
+    steps:
+    - name: deploy frontend
+      run: |
+          URL="${{ secrets.AMPLIFY_WEBHOOK_URL }}"
+          curl -X POST -d {} "$URL" -H "Content-Type: application/json"
