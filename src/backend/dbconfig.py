@@ -5,7 +5,7 @@ from urllib.parse import quote_plus  # <-- needed for special characters
 # default local dev settings
 env_local = {
     'username': 'postgres',
-    'password': 'password',
+    'password': 'Adarsh233',
     'host': 'localhost',
     'port': '5432',
     'database': 'postgres',
