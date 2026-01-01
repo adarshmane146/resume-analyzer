@@ -2,7 +2,7 @@
 
 ## About
 
-ResumeAnalyzer is a DCU Computer Science 4th year project that was created by Darragh McGonigle and Stephen McAleese.
+ResumeAnalyzer is a  Computer Science 4th year project .
 
 ## Description
 
